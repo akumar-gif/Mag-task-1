@@ -29,10 +29,11 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                 withCredentials([( $class: 'StringBinding', credentialsId: 'my-aws', 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
-                                 ( $class: 'StringBinding', credentialsId: 'my-aws', 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]){
+                 withCredentials([
+                    [string(credentialsId: 'my-aws', 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID')],
+                    [string(credentialsId: 'my-aws', 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]
+                    ]){
                 script {
-                    
                         sh 'terraform plan'
                     }
                 }
@@ -42,9 +43,12 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
+                withCredentials([
+                        [string(credentialsId: 'my-aws', 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID')],
+                        [string(credentialsId: 'my-aws', 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]
+                    ])
                 script {
-                    withCredentials([( $class: 'StringBinding', credentialsId: 'my-aws', 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
-                                ( $class: 'StringBinding', credentialsId: 'my-aws', 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]){
+                    {
                         sh 'terraform apply'
                     }
                 }
