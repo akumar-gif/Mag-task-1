@@ -14,7 +14,8 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                withAWS(credentials: 'aws-credentials', region: 'us-east-1'){
+                 withCredentials([string(my-aws: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
+                                 string(my-aws: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]){
                 script {
                     
                         sh 'terraform init'
@@ -26,7 +27,8 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                withAWS(credentials: 'aws-credentials', region: 'us-east-1'){
+                 withCredentials([string(my-aws: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
+                                 string(my-aws: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]){
                 script {
                     
                         sh 'terraform plan'
@@ -39,8 +41,9 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 script {
-                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
-                        sh 'terraform apply -input=false -auto-approve tfplan'
+                     withCredentials([string(my-aws: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
+                                 string(my-aws: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]){
+                        sh 'terraform apply'
                     }
                 }
             }
