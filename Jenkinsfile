@@ -26,6 +26,7 @@ pipeline {
         steps {
               
             script {
+                    sh 'rm -rf .terraform*'
                     sh 'terraform init'
                 }
             }
