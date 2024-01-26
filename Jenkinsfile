@@ -1,9 +1,9 @@
 pipeline {
     agent any
     
-    environment {
+    // environment {
        
-    }
+    // }
 
     stages {
         stage('Checkout') {
@@ -14,30 +14,32 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
+                withAWS(credentials: 'aws-credentials', region: 'us-east-1'){
                 script {
                     
                         sh 'terraform init'
                     }
                 }
             }
+        }
         
 
         stage('Terraform Plan') {
             steps {
+                withAWS(credentials: 'aws-credentials', region: 'us-east-1'){
                 script {
                     
                         sh 'terraform plan'
                     }
                 }
             }
+        }
         
 
         stage('Terraform Apply') {
             steps {
                 script {
-                    def tfHome = env.TF_HOME
-
-                    withEnv(["TF_HOME=${tfHome}"]) {
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
                         sh 'terraform apply -input=false -auto-approve tfplan'
                     }
                 }
@@ -45,15 +47,3 @@ pipeline {
         }
     }
 }
-
-    // post {
-    //     always {
-    //         script {
-    //             def tfHome = env.TF_HOME
-
-    //             withEnv(["TF_HOME=${tfHome}"]) {
-    //                 sh 'terraform destroy -input=false -auto-approve'
-    //             }
-    //         }
-    //     }
-    // }
