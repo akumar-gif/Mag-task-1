@@ -6,6 +6,14 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-secret	')
     }
 
+    parameters {
+        choice(
+            choices: ['apply', 'destroy'],
+            description: 'Terraform action to apply or destroy',
+            )
+        
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -37,10 +45,13 @@ pipeline {
 
     stage('Terraform Apply') {
         steps {
-            
             script {
-                    sh 'terraform apply'
+                if(choice = apply){
+                    sh 'terraform apply -auto-approve'
+                } else if (choice = destroy) {
+                    sh 'terraform destroy -auto-approve'
                 }
+            }
             }
         }
     }
