@@ -10,6 +10,7 @@ pipeline {
         choice(
             choices: ['apply', 'destroy'],
             description: 'Terraform action to apply or destroy',
+            name: 'action'
             )
         
     }
@@ -46,9 +47,9 @@ pipeline {
     stage('Terraform Apply') {
         steps {
             script {
-                if(choice == 'apply'){
+                if(params.action == 'apply'){
                     sh 'terraform apply -auto-approve'
-                } else if (choice == 'destroy') {
+                } else if (params.action == 'destroy') {
                     sh 'terraform destroy -auto-approve'
                 }
             }
