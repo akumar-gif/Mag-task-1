@@ -51,7 +51,7 @@ pipeline {
             script {
                 if(params.action == 'apply'){
                     sh 'terraform apply -auto-approve'
-                } else(params.action == 'destroy') {
+                } else {
                     sh 'terraform destroy -auto-approve'
                 }
             }
